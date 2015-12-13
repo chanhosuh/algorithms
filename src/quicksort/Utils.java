@@ -39,8 +39,9 @@ public class Utils {
 	}
 	
 	public static boolean validateSort(int[] a) {
-		if (a == null || a.length == 0 || a.length == 1 ) return true
-				;
+		if (a == null || a.length == 0 || a.length == 1 ) 
+			return true;
+		
 	    for (int i = 1; i < a.length; i ++) {
 	    	if ( a[i-1] > a[i] )
 	    		return false;

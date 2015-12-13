@@ -46,19 +46,44 @@ public class Sedgewick {
 		return j;
 	}
 	
+	/* hybrid sort method: start with quicksort, but leave unsorted small arrays
+	 * which are sorted all at once with insertion sort */
+	public static void hybridSort(int[] a) {
+		if (a == null || a.length == 0) return;
+		shuffle(a);
+		hybridSort(a, 0, a.length - 1);
+		insertionSort(a);
+	}
+	
+	private static void hybridSort(int[] a, int lo, int hi) {
+		if (hi <= lo + 10) return;
+		
+		int pivot = partition(a, lo, hi);
+		hybridSort(a, lo, pivot - 1);
+		hybridSort(a, pivot + 1, hi);
+	}
+	
 	
 	public static void main(String[] args) {
 		// log(n) stack space, so this is fine, but heap ran out
 		//int[] a = getRandomArray(1000000000, 2);
-		int[] a = getRandomArray(1000000, 100);
-		Timer timer = new Timer();
+		int[] a = getRandomArray(100000000, 100);
+		int[] b = copyArray(a);
 		
+		Timer timer = new Timer();
 		sort(a);
 		Double elapsedTime = timer.getElapsedTime();
 		System.out.println("Elapsed time : " + elapsedTime);
+		
+		Timer timer2 = new Timer();
+		hybridSort(b);
+		Double elapsedTime2 = timer2.getElapsedTime();
+		System.out.println("Elapsed time : " + elapsedTime2);
+		
 		//printArray(a);
 		System.out.println("\nSorted : " + validateSort(a));
-		
+		System.out.println("\nSorted : " + validateSort(b));
+
 
 	}
 	
