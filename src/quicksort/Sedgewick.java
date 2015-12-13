@@ -6,6 +6,7 @@ public class Sedgewick extends Hoare {
 
 	public static void sort(int[] a) {
 		if (a == null || a.length == 0) return;
+		shuffle(a);
 		sort(a, 0, a.length - 1);
 	}
 	
@@ -48,7 +49,7 @@ public class Sedgewick extends Hoare {
 	public static void main(String[] args) {
 		// log(n) stack space, so this is fine, but heap ran out
 		//int[] a = getRandomArray(1000000000, 2);
-		int[] a = getRandomArray(10000, 2);  //Number of calls: 61,622,708
+		int[] a = getRandomArray(10000000, 1000);
 		
 		sort(a);
 		//printArray(a);

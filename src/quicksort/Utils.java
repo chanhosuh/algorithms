@@ -40,5 +40,20 @@ public class Utils {
 	    
 	    return true;
 	}
+	
+	public static void shuffle(int[] a) {
+		// Fischer-Yates shuffle
+		
+		for (int i = a.length - 1; i > 0 ; i--) {
+			int j = rand.nextInt(i+1);
+			swap(a, i, j);
+		}
+	}
+	
+	public static void setRandomPivot(int[] a, int lo, int hi) {
+		if (a == null || a.length == 0) return;
+		int p = rand.nextInt(hi - lo + 1) + lo;
+		swap(a, lo, p);
+	}
 
 }

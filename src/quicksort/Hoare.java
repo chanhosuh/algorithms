@@ -20,10 +20,13 @@ public class Hoare {
 	}
 	
 	private static int partition(int[] a, int lo, int hi) {
+		// swap random element to index lo
+		setRandomPivot(a, lo, hi);
+		int val = a[lo];
+
 		// sort method should pass in lo & hi with lo <= hi
 		int i = lo;
 		int j = hi + 1;
-		int val = a[lo];
 		
 		while (true) {
 			// original Hoare conditions for ending sweeps, cf
@@ -48,7 +51,7 @@ public class Hoare {
 	public static void main(String[] args) {
 		// easily blows the stack
 		//int[] a = getRandomArray(1000000, 2);
-		int[] a = getRandomArray(100000, 5);
+		int[] a = getRandomArray(10000, 50);
 		
 		sort(a);
 		//printArray(a);
