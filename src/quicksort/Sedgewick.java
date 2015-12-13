@@ -51,7 +51,6 @@ public class Sedgewick {
 		// log(n) stack space, so this is fine, but heap ran out
 		//int[] a = getRandomArray(1000000000, 2);
 		int[] a = getRandomArray(1000000, 100);
-		int[] b = copyArray(a);
 		Timer timer = new Timer();
 		
 		sort(a);

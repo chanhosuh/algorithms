@@ -1,6 +1,5 @@
 package quicksort;
 
-import java.util.Random;
 import static quicksort.Utils.*;
 
 
