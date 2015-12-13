@@ -1,8 +1,9 @@
 package quicksort;
 
 import static quicksort.Utils.*;
+import quicksort.Timer;
 
-public class Sedgewick extends Hoare {
+public class Sedgewick {
 
 	public static void sort(int[] a) {
 		if (a == null || a.length == 0) return;
@@ -49,11 +50,17 @@ public class Sedgewick extends Hoare {
 	public static void main(String[] args) {
 		// log(n) stack space, so this is fine, but heap ran out
 		//int[] a = getRandomArray(1000000000, 2);
-		int[] a = getRandomArray(10000000, 1000);
+		int[] a = getRandomArray(1000000, 100);
+		int[] b = copyArray(a);
+		Timer timer = new Timer();
 		
 		sort(a);
+		Double elapsedTime = timer.getElapsedTime();
+		System.out.println("Elapsed time : " + elapsedTime);
 		//printArray(a);
-		System.out.println("\n" + validateSort(a));
+		System.out.println("\nSorted : " + validateSort(a));
+		
+
 	}
 	
 }

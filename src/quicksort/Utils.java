@@ -30,6 +30,14 @@ public class Utils {
 		}
 	}
 	
+	public static int[] copyArray(int[] a) {
+		int[] b = new int[a.length];
+		for (int i = 0; i < a.length; i++) {
+			b[i] = a[i];
+		}
+		return b;
+	}
+	
 	public static boolean validateSort(int[] a) {
 		if (a == null || a.length == 0 || a.length == 1 ) return true
 				;
@@ -55,5 +63,21 @@ public class Utils {
 		int p = rand.nextInt(hi - lo + 1) + lo;
 		swap(a, lo, p);
 	}
-
+	
+	public static void insertionSort(int[] a) {
+		if (a == null || a.length == 0) return;
+		
+		for (int i = 1; i < a.length; i++) {
+			int unsorted = a[i]; // a[0:i-1] is sorted
+			int j = i;
+			while (j > 0 && a[j-1] > unsorted) {
+				a[j] = a[j-1];
+				j--;
+			}
+			a[j] = unsorted; 
+		}
+	}
+	
 }
+
+
