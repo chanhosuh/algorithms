@@ -7,6 +7,7 @@ public class Dijkstra {
 	
 	public static void sort(int[] a) {
 		if (a == null || a.length == 0) return;
+		shuffle(a);
 		sort(a, 0, a.length - 1);
 	}
 	
@@ -37,14 +38,21 @@ public class Dijkstra {
 	public static void main(String[] args) {
 		// 2-way partitioning (Sedgewick) Elapsed time : 16.844911082
 		// 3-way partitioning (Dijkstra) Elapsed time : 0.738166288
-		int[] a = getRandomArray(100000000, 2);
-		Timer timer = new Timer();
+		// int[] a = getRandomArray(100000000, 2);
 		
-		sort(a);
-		Double elapsedTime = timer.getElapsedTime();
-		System.out.println("Elapsed time : " + elapsedTime);
+		int iterNum = 1000;
+		Double elapsedTime = 0.0;
+		for (int i = 0; i < iterNum; i++) {
+			int[] a = getRandomArray(100000, 2);
+
+			Timer timer = new Timer();
+			sort(a);
+			elapsedTime += timer.getElapsedTime();
+		}
+		System.out.println("Elapsed time : " + elapsedTime / iterNum);
+		
 		//printArray(a);
-		System.out.println("\nSorted : " + validateSort(a));
+		//System.out.println("\nSorted : " + validateSort(a));
 		
 
 	}
