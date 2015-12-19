@@ -1,23 +1,29 @@
 package quicksort;
 
+
 import static quicksort.Utils.*;
 
 import java.util.concurrent.TimeUnit;
 
 import org.openjdk.jmh.Main;
 import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.Level;
+import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
-
+@State(Scope.Benchmark)
 public class Sedgewick {
 
 	public static void sort(int[] a) {
 		if (a == null || a.length == 0) return;
-		shuffle(a);
+		// for benchmarking, we use random array so we can skip the shuffle...
+		// shuffle(a);  
 		sort(a, 0, a.length - 1);
 	}
 	
@@ -58,7 +64,8 @@ public class Sedgewick {
 	
 	public static void sortWithSentinels(int[] a) {
 		if (a == null || a.length == 0) return;
-		shuffle(a);
+		// for benchmarking, we use random array so we can skip the shuffle...
+		// shuffle(a); 
 		sortWithSentinels(a, 0, a.length - 1);
 	}
 	
@@ -105,7 +112,8 @@ public class Sedgewick {
 	 * which are sorted all at once with insertion sort */
 	public static void hybridSort(int[] a) {
 		if (a == null || a.length == 0) return;
-		shuffle(a);
+		// for benchmarking, we use random array so we can skip the shuffle...
+		// shuffle(a); 
 		hybridSort(a, 0, a.length - 1);
 		insertionSort(a);
 	}
@@ -118,77 +126,72 @@ public class Sedgewick {
 		hybridSort(a, pivot + 1, hi);
 	}
 	
+	/*  State : Random array to be sorted */
+	
+	@SuppressWarnings("unused")
+	public int[] randomArray;
+	
+	@Setup(Level.Invocation)
+	public void initializeRandomArray() {
+		randomArray = getRandomArray(100000, 100);
+		shuffle(randomArray);
+	}
+	
+	/* * * * * * * * * * * * * * * * * */
+	
 	@Benchmark
-	public static boolean testSort() {
-		int[] a = getRandomArray(100000000, 1000);
+	public boolean testSort() {
 
-		sort(a);
+		sort(randomArray);
 		
-		return validateSort(a);
+		return validateSort(randomArray);
 
 	}
 	
 	@Benchmark
-	public static boolean testSortWithSentinels() {
-		int[] a = getRandomArray(100000000, 1000);
+	public boolean testSortWithSentinels() {
 
-		sortWithSentinels(a);
+		sortWithSentinels(randomArray);
 		
-		return validateSort(a);
+		return validateSort(randomArray);
 
 	}
 	
 	@Benchmark
-	public static boolean testHybridSort() {
-		int[] a = getRandomArray(100000000, 1000);
+	public boolean testHybridSort() {
 
-		hybridSort(a);
+		hybridSort(randomArray);
 		
-		return validateSort(a);
+		return validateSort(randomArray);
 
 	}
 	
+//    @Benchmark
+//    public int testShuffle() {
+//		shuffle(randomArray);
+//		return randomArray[0] + randomArray[101];
+//    }
     
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(Sedgewick.class.getSimpleName())
                 .warmupIterations(5)
-                .measurementIterations(10)
+                .measurementIterations(25)
                 .mode(Mode.AverageTime)
                 .timeUnit(TimeUnit.MILLISECONDS)
                 .forks(1)
+                .shouldFailOnError(true)
+                .shouldDoGC(true)
+                .jvmArgs("-server")
                 .build();
  
         new Runner(opt).run();
 
-//        # Benchmark: quicksort.Sedgewick.testHybridSort
-//
-//        Result "testHybridSort":
-//          21598.849 ±(99.9%) 1119.697 ms/op [Average]
-//          (min, avg, max) = (21116.605, 21598.849, 23568.521), stdev = 740.610
-//          CI (99.9%): [20479.152, 22718.546] (assumes normal distribution)
-//
-//        # Benchmark: quicksort.Sedgewick.testSort
-//
-//        Result "testSort":
-//          21116.172 ±(99.9%) 621.166 ms/op [Average]
-//          (min, avg, max) = (20684.254, 21116.172, 21808.136), stdev = 410.863
-//          CI (99.9%): [20495.006, 21737.339] (assumes normal distribution)
-//
-//        # Benchmark: quicksort.Sedgewick.testSortWithSentinels
-//
-//        Result "testSortWithSentinels":
-//          21624.132 ±(99.9%) 665.105 ms/op [Average]
-//          (min, avg, max) = (20740.663, 21624.132, 22343.349), stdev = 439.926
-//          CI (99.9%): [20959.028, 22289.237] (assumes normal distribution)
-//
-//
-//        # Run complete. Total time: 00:16:03
-//
-//        Benchmark                        Mode  Cnt      Score      Error  Units
-//        Sedgewick.testHybridSort         avgt   10  21598.849 ± 1119.697  ms/op
-//        Sedgewick.testSort               avgt   10  21116.172 ±  621.166  ms/op
-//        Sedgewick.testSortWithSentinels  avgt   10  21624.132 ±  665.105  ms/op
+//		randomArray = getRandomArray(100000, 100);
+//        Benchmark                        Mode  Cnt  Score   Error  Units
+//        Sedgewick.testHybridSort         avgt   25  4.604 Â± 0.065  ms/op
+//        Sedgewick.testSort               avgt   25  5.059 Â± 0.049  ms/op
+//        Sedgewick.testSortWithSentinels  avgt   25  5.184 Â± 0.043  ms/op
 
     }
 	
