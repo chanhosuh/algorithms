@@ -4,6 +4,8 @@ package quicksort;
 import static quicksort.Utils.*;
 
 import java.util.concurrent.TimeUnit;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 import org.openjdk.jmh.Main;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -23,31 +25,47 @@ public class Sedgewick {
 	Sedgewick, Robert. "Implementing quicksort programs." 
 	Communications of the ACM 21.10 (1978): 847-857.
 */
+	private static final Deque<Integer> stack = new ArrayDeque<>();
+	private static final int CUTOFF = 10;
+	
+	
 	public static void sort(int[] a) {
 		if (a == null || a.length == 0) return;
+
+		stack.push(a.length - 1); stack.push(0);
 		
-		sort(a, 0, a.length - 1); // recursively quicksort except on small subarrays
+		while(!stack.isEmpty()) {
+			int lo = stack.pop();
+			int hi = stack.pop();
+			
+			if (hi - lo > CUTOFF) {
+				// pivot is the median of lo, hi, and mid
+				// pivot is set to lo, and lo + 1 and hi are sentinels
+				medianOfThree(a, lo, hi);
+				
+				// some alternatives are:
+				// shuffle(a);  // random shuffle of entire array (do this before sorting)
+				// setRandomPivot(a, lo, hi);  // select random pivot, as suggested by Hoare
+		        // various median schemes:
+				// median of another number, but Sedgewick found 3 or 5 was best
+				// median of random sample (if we are worried about denial-of-service attacks)
+				// Tukey's ninther (median of medians)
+				
+				int pivot = partition(a, lo, hi);
+				
+				// push smaller "half" onto auxiliary stack last
+				// this will greatly mitigate stack overflow (stack size ~ log(n))
+				if (pivot - lo < hi - pivot) {
+					stack.push(hi); stack.push(pivot + 1);
+					stack.push(pivot - 1); stack.push(lo);
+				} else {
+					stack.push(pivot - 1); stack.push(lo);
+					stack.push(hi); stack.push(pivot + 1);
+				}
+			}
+		}
+		
 		insertionSort(a);
-	}
-	
-	private static void sort(int[] a, int lo, int hi) {
-		if (hi <= lo + 10) return;
-		
-		// pivot is the median of lo, hi, and mid
-		// pivot is set to lo, and lo + 1 and hi are sentinels
-		medianOfThree(a, lo, hi);
-		
-		// some alternatives are:
-		// shuffle(a);  // random shuffle of entire array (do this before sorting)
-		// setRandomPivot(a, lo, hi);  // select random pivot, as suggested by Hoare
-        // various median schemes:
-		// median of another number, but Sedgewick found 3 or 5 was best
-		// median of random sample (if we are worried about denial-of-service attacks)
-		// Tukey's ninther (median of medians)
-		
-		int pivot = partition(a, lo, hi);
-		sort(a, lo, pivot - 1);
-		sort(a, pivot + 1, hi);
 	}
 	
 	private static void medianOfThree(int[] a, int lo, int hi) {
@@ -97,7 +115,7 @@ public class Sedgewick {
 	
 	@Setup(Level.Invocation)
 	public void initializeRandomArray() {
-		randomArray = getRandomArray(1000000, 1000);
+		randomArray = getRandomArray(100000, 1000);
 		shuffle(randomArray);
 	}
 	
@@ -137,7 +155,6 @@ public class Sedgewick {
 //		int[] randomArray = getRandomArray(10000000, 10000);
 //		shuffle(randomArray);
 //		sort(randomArray);
-//				
 //		System.out.println( validateSort(randomArray) );
     }
 	
