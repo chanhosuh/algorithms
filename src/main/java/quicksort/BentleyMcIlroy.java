@@ -43,23 +43,26 @@ public class BentleyMcIlroy {
 				if (a[i] == val) swap(a, i, p++); // swap eq key to left end
 				if (a[j] == val) swap(a, j, q--); // swap eq key to right end
 			}
-			else
+			else { // eventually i >= j
+				if (a[j] < val) swap(a, j, lo); // make sure a[j] is in sorted position
 				break;
+			}
 		}
-		// a[lo, p), a(q, hi] has eq keys
-		// a[p, i] has < keys
+		// a[lo + 1, p), a(q, hi] has eq keys (possibly a[lo] is a < key now)
+		// a[p, j) has < keys
+		// a[j] is eq (sorted)
 		// a[j + 1, q] has > keys
 		
-		i = j;
+		i = j-1;
 		j = j+1;
 
 		/* swap < and > keys to ends and eq keys to middle */
 		
-		// precondition: a[lo, p) has eq keys, a[p,i] has < keys
-		for (int k = lo; k < p; k++) {
+		// precondition: a[lo+1, p) has eq keys, a[p,i] has < keys
+		for (int k = lo+1; k < p; k++) {
 			swap(a, k, i);
 			i--;
-		} // postcondition: a[lo, i] has all the < keys
+		} // postcondition: a[lo+1, i] has all the < keys
 		
 		// precondition: a(q, hi] has eq keys, a[j, q] has > keys
 		for (int k = hi; k > q; k--) {
