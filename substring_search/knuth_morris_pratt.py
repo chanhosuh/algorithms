@@ -4,19 +4,30 @@ Created on Jul 3, 2017
 @author: suh
 '''
 
-# our alphabet consists of all RADIX characters
+# our alphabet consists of all printable ascii characters
 from string import printable, ascii_lowercase
 
 RADIX = ascii_lowercase
 
+
 class DFA(object):
-    ''' Knuth--Morris--Pratt discrete finite automaton, which implements
-        a prefix table for fast lookup of substrings.
+    ''' The Knuth--Morris--Pratt algorithm for substring search:
+
+        The key idea is to create a lookup table based on the pattern,
+        such that for any prefix of the pattern and for every possible
+        next character in the input, we know what new prefix currently
+        matches, i.e. is a suffix of the input processed so far.
+
+        A clean way to implement this is as a discrete finite automaton
+        (DFA), as in Sedgewick & Wayne's Algorithms.  Since every prefix
+        of the pattern is determined by its length, we can simply use 
+        the prefix length as the state of the DFA and we have to determine
+        how an input character transitions the DFA to the next state.
 
         The state of the DFA ranges from 0 to N-1 where N is the length
         of the pattern string.  A state value of i while processing the
-        input stream means the last i characters processed is the maximal
-        prefix of the pattern.
+        input stream means the last i characters processed are maximal
+        with respect to forming a prefix of the pattern.
     '''
     def __init__(self, pattern):
         self.pattern = pattern
@@ -37,42 +48,41 @@ class DFA(object):
 
         # first row is easy:
         # it has 0s for mismatches and a 1 for first char in pattern
-        row = []
+        row = {}
         for char in RADIX:
             if char == pattern[0]:
                 # on match, increase state value by 1
-                row.append(1)
+                row[char] = 1
             else:
                 # on mismatch, stay in zero state
-                row.append(0)
+                row[char] = 0
         transition_table.append(row)
 
         aux_state = 0
 
         # start on 2nd letter of pattern
         for i, pattern_char in enumerate(pattern[1:], 1):
-            row = []
-            for j, char in enumerate(RADIX):
+            row = {}
+            for char in RADIX:
                 if char == pattern_char:
                     # on match, increase state value by 1
-                    row.append(i + 1)
+                    row[char] = i + 1
                 else:
                     # key insight: on mismatch, we can suppose the input stream
                     # starts on second letter of pattern and by induction, use
                     # a previous row of the transition table
-                    row.append(transition_table[aux_state][j])
+                    row[char] = transition_table[aux_state][char]
             transition_table.append(row)
             # now we need to update our auxiliary state
-            for j, char in enumerate(RADIX):
+            for char in RADIX:
                 if char == pattern_char:
-                    aux_state = transition_table[aux_state][j]
+                    aux_state = transition_table[aux_state][char]
 
         return transition_table
 
     def read_char(self, char):
         ''' based on single character input and current state, transitions to next state '''
-        i = RADIX.index(char)
-        self.state = self.transition_table[self.state][i]
+        self.state = self.transition_table[self.state][char]
 
     @property
     def found(self):
