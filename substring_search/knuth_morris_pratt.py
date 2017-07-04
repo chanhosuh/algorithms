@@ -11,31 +11,33 @@ RADIX = ascii_lowercase
 
 
 class DFA(object):
-    ''' The Knuth--Morris--Pratt algorithm for substring search:
-
-        The key idea is to create a lookup table based on the pattern,
-        such that for any prefix of the pattern and for every possible
-        next character in the input, we know what new prefix currently
-        matches, i.e. is a suffix of the input processed so far.
-
-        A clean way to implement this is as a discrete finite automaton
-        (DFA), as in Sedgewick & Wayne's Algorithms.  Since every prefix
-        of the pattern is determined by its length, we can simply use 
-        the prefix length as the state of the DFA and we have to determine
-        how an input character transitions the DFA to the next state.
-
-        The state of the DFA ranges from 0 to N-1 where N is the length
-        of the pattern string.  A state value of i while processing the
-        input stream means the last i characters processed are maximal
-        with respect to forming a prefix of the pattern.
     '''
+    The Knuth--Morris--Pratt algorithm for substring search:
+
+    The key idea is to create a lookup table based on the pattern,
+    such that for any prefix of the pattern and for every possible
+    next character in the input, we know what new prefix currently
+    matches, i.e. is a suffix of the input processed so far.
+
+    A clean way to implement this is as a discrete finite automaton
+    (DFA), as in Sedgewick & Wayne's Algorithms.  Since every prefix
+    of the pattern is determined by its length, we can simply use 
+    the prefix length as the state of the DFA and we have to determine
+    how an input character transitions the DFA to the next state.
+
+    The state of the DFA ranges from 0 to N-1 where N is the length
+    of the pattern string.  A state value of i while processing the
+    input stream means the last i characters processed are maximal
+    with respect to forming a prefix of the pattern.
+    '''
+
     def __init__(self, pattern):
         self.pattern = pattern
         self.transition_table = self.preprocess_pattern(pattern)
         self.state = 0
 
-    @classmethod
-    def preprocess_pattern(cls, pattern):
+    @staticmethod
+    def preprocess_pattern(pattern):
         '''
         Uses Knuth--Morris--Pratt algorithm to preprocess lookup pattern
         into a prefix table, implemented as a discrete finite automaton.
