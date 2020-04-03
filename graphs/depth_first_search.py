@@ -1,14 +1,13 @@
-
-
 class DepthFirstSearch(object):
-
     def __init__(self, graph):
-        self.marked = [False] * graph.num_vertices
+        self.visited = [False] * graph.num_vertices
         self.graph = graph
 
     def search(self, vertex):
-        self.marked[vertex] = True
+        self.visited[vertex] = True
         for v in self.graph.adj[vertex]:
-            if not self.marked[v]:
+            if not self.visited[v]:
                 self.search(v)
 
+
+DFS = DepthFirstSearch
