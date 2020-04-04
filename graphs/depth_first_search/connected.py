@@ -1,8 +1,10 @@
 """
 Given a graph, check its connectivity
 """
+from graphs.graph import create_graph
 
 
+# pylint: disable=redefined-outer-name
 class ConnectedComponents:
     def __init__(self, graph):
         """
@@ -47,3 +49,28 @@ class ConnectedComponents:
         for i, id_ in enumerate(self.ids):
             id_to_vertices.setdefault(id_, []).append(i)
         return id_to_vertices
+
+
+if __name__ == "__main__":
+    """
+    Expected result:
+    
+    Number of components: 3
+    Components with IDs:
+    ID: 0
+    Component: [0, 1, 2, 3, 4, 5, 6]
+
+    ID: 1
+    Component: [7, 8]
+
+    ID: 2
+    Component: [9, 10, 11, 12]
+    """
+    graph = create_graph("graphs/data/tinyG.txt")
+    cc = ConnectedComponents(graph)
+    print("Number of components:", cc.count)
+    print("Components with IDs:")
+    for id_, component in cc.components.items():
+        print("ID:", id_)
+        print("Component:", component)
+        print("")
