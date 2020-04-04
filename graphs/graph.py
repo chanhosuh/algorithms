@@ -25,9 +25,10 @@ def create_graph(text_file):
         2 1   <-- vertices of edge
     """
     with open(text_file, "r") as f:
-        num_vertices = f.next()
+        num_vertices = next(f)
+        num_vertices = int(num_vertices.strip())
         # num_edges, unused
-        _ = f.next()
+        _ = next(f)
         graph = Graph(num_vertices)
         for edge in f:
             v1, v2 = edge.split()
