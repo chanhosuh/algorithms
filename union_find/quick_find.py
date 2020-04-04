@@ -13,8 +13,15 @@ class QuickFind(UnionFind):
         """
         combine the components containing a and b
         
-        for each k connected to b, set its id to 
-        the component id for a
+        Algorithm:
+        
+        1. for each k connected to b, set its id to 
+           the component id for a
+        2. decrement count
+        
+        Note: this is O(M*N) for M = num_vertices
+        and N = number of connections, but "find"
+        is very fast, O(1).
         """
         id_b = self.ids[b]
         id_a = self.ids[a]
