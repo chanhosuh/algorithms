@@ -1,5 +1,5 @@
 from union_find import UnionFind
-from io import StringIO
+from union_find.utils import run_harness
 
 # pylint: disable=redefined-outer-name
 class QuickUnion(UnionFind):
@@ -59,30 +59,4 @@ class QuickUnion(UnionFind):
 
 
 if __name__ == "__main__":
-    text = """10
-        4 3
-        3 8
-        6 5
-        9 4
-        2 1
-        8 9
-        5 0
-        7 2
-        6 1
-        1 0
-        6 7"""
-    buffer = StringIO(text)
-
-    num_vertices = next(buffer)
-    num_vertices = int(num_vertices.strip())
-    union_find = QuickUnion(num_vertices)
-
-    for line in buffer:
-        print(line)
-        a, b = line.split()
-        a = int(a)
-        b = int(b)
-        union_find.union(a, b)
-
-    print("number of components:", union_find.count())
-    assert union_find.count() == 2
+    run_harness(QuickUnion)
