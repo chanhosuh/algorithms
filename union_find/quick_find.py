@@ -25,6 +25,10 @@ class QuickFind(UnionFind):
         """
         id_b = self.ids[b]
         id_a = self.ids[a]
+
+        if id_a == id_b:
+            return
+
         for k, id_ in enumerate(self.ids):
             if id_ == id_b:
                 self.ids[k] = id_a
