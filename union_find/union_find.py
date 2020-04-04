@@ -28,7 +28,7 @@ class UnionFind(ABC):
 
     def connected(self, a, b):
         """ return if a and b are in the same component """
-        raise NotImplementedError()
+        return self.find(a) == self.find(b)
 
     def count(self):
         """ return the number of components """
