@@ -1,6 +1,7 @@
 """ Dijkstra shortest path algorithm """
 import math
 from queue import PriorityQueue
+from graphs.graph import create_weighted_digraph
 
 
 
@@ -25,17 +26,22 @@ class ShortestPathTree:
             # with priority given by distance through shortest path tree 
             # plus single edge weight
             dist, v = q.get()
+            print(f'processing {v}')
             self.visited[v] = True
             for e in graph.adj[v]:
                 w = e.end
+                print(f'.. Checking edge to {w}')
                 if self.visited[w]:
+                    print('.... already processed... skipping')
                     continue
                 v_dist = self.distances[v]
                 w_dist = self.distances[w]
-                if v_dist + e.eight < w_dist:
+                if v_dist + e.weight < w_dist:
+                    print(f'.... relaxing edge')
                     w_dist = v_dist + e.weight
+                    self.distances[w] = w_dist
                     self.parent[w] = v
-                q.put(w_dist, w)
+                q.put((w_dist, w))
         
     def path_to(self, v):
         if v == self.source:
@@ -47,3 +53,16 @@ class ShortestPathTree:
         
         path.append(self.source)
         return path[::-1]
+
+
+if __name__ == '__main__':
+    """
+    Expected result:
+    distances = [0, 1.05, 0.26, 0.9900000000000001, 0.38, 0.73, 1.5100000000000002, 0.6000000000000001]
+    
+    Example file and data from https://algs4.cs.princeton.edu/44sp/
+    """
+    graph = create_weighted_digraph('graphs/data/tinyEWD.txt')
+    print(graph.adj)
+    spt = ShortestPathTree(graph, 0)
+    print(spt.distances)
