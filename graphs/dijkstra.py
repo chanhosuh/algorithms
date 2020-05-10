@@ -1,7 +1,7 @@
 """ Dijkstra shortest path algorithm """
 import math
 from queue import PriorityQueue
-from graphs.graph import create_weighted_digraph
+from graphs.graph import create_weighted_digraph, DirectedEdge
 
 
 
@@ -12,7 +12,7 @@ class ShortestPathTree:
         self.visited = [False] * graph.num_vertices
         # initialize distances to source
         self.distances = [math.inf] * graph.num_vertices
-        self.parent = [None] * graph.num_vertices
+        self.edge_to = [None] * graph.num_vertices
 
         q = PriorityQueue()
 
@@ -40,29 +40,38 @@ class ShortestPathTree:
                     print(f'.... relaxing edge')
                     w_dist = v_dist + e.weight
                     self.distances[w] = w_dist
-                    self.parent[w] = v
+                    self.edge_to[w] = e
                 q.put((w_dist, w))
         
     def path_to(self, v):
         if v == self.source:
-            return [v]
+            return []
 
-        path = [v]
-        while self.parent[v] != self.source:
-            v = self.parent[v]
-        
-        path.append(self.source)
-        return path[::-1]
+        e = self.edge_to[v]
+        path = self.path_to(e.start)
+        path.append(e)
+        return path
 
 
 if __name__ == '__main__':
     """
     Expected result:
-    distances = [0, 1.05, 0.26, 0.9900000000000001, 0.38, 0.73, 1.5100000000000002, 0.6000000000000001]
-    
-    Example file and data from https://algs4.cs.princeton.edu/44sp/
+
+    Distances:
+    [0, 1.05, 0.26, 0.9900000000000001, 0.38, 0.73, 1.5100000000000002, 0.6000000000000001]
+    Path to 1:
+    [DirectedEdge(start=0 end=4 weight=0.38), DirectedEdge(start=4 end=5 weight=0.35), DirectedEdge(start=5 end=1 weight=0.32)]
+    Path to 6:
+    [DirectedEdge(start=0 end=2 weight=0.26), DirectedEdge(start=2 end=7 weight=0.34), DirectedEdge(start=7 end=3 weight=0.39), DirectedEdge(start=3 end=6 weight=0.52)]
+
+    Example file from https://algs4.cs.princeton.edu/44sp/
     """
     graph = create_weighted_digraph('graphs/data/tinyEWD.txt')
     print(graph.adj)
     spt = ShortestPathTree(graph, 0)
+    print('Distances:')
     print(spt.distances)
+    print('Path to 1:')
+    print(spt.path_to(1))
+    print('Path to 6:')
+    print(spt.path_to(6))
