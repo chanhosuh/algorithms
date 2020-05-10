@@ -57,3 +57,30 @@ class DirectedEdge(object):
         self.start = start
         self.end = end
         self.weight = weight
+    
+    def __repr__(self):
+        return f"DirectedEdge(start={self.start} end={self.end} weight={self.weight})"
+
+
+def create_weighted_digraph(text_file):
+    """
+        Text file should consist of integers in the format:
+        3   <-- number of vertices
+        2   <-- number of edges
+        0 2 0.10   <-- directed edge: start, end, weight
+        2 1 1.2   <-- directed edge: start, end, weight
+    """
+    with open(text_file, "r") as f:
+        num_vertices = next(f)
+        num_vertices = int(num_vertices.strip())
+        # num_edges, unused
+        _ = next(f)
+        graph = EdgeWeightedDiGraph(num_vertices)
+        for edge in f:
+            v1, v2, weight = edge.split()
+            v1 = int(v1)
+            v2 = int(v2)
+            weight = float(weight)
+            graph.add_edge(v1, v2, weight)
+
+    return graph
