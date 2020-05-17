@@ -1,3 +1,10 @@
+# Python
+*.pyc
+
+# Eclipse
 /.project
 /.pydevproject
+/.settings
+
+# Mac
 /.DS_Store
