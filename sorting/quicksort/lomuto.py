@@ -98,7 +98,13 @@ def shuffle(a):
 
 
 if __name__ == "__main__":
-    a = list(range(100))
+    a = list(range(10000))
     shuffle(a)
     quicksort(a, 0, len(a) - 1)
     print(a)
+
+    # This will throw
+    # RecursionError: maximum recursion depth exceeded in comparison
+    # See how this is handled in `fat_pivot.py`.
+    a = [0] * 10000
+    quicksort(a, 0, len(a) - 1)
