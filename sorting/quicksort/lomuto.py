@@ -6,6 +6,7 @@ We tweak a refinement attributed to Sedgewick in Exercise 2,
 so that no final swap of the pivot and comparison index is
 needed, but we prefer to scan from left to right. ;)
 """
+from random import randrange
 
 
 def quicksort(a, lo, hi):
@@ -18,13 +19,11 @@ def quicksort(a, lo, hi):
     if lo >= hi:
         return
 
-    
     p = partition(a, lo, hi)
     quicksort(a, lo, p - 1)
     quicksort(a, p + 1, hi)
-    
-    
-    
+
+
 def partition(a, lo, hi):
     """
     Args:
@@ -42,21 +41,22 @@ def partition(a, lo, hi):
             of quicksort, as we know each partition
             step makes progress.
     """
+    position_pivot(a, lo, hi)
     val = a[hi]
     p = lo - 1
-    for i in range(lo, hi+1):
+    for i in range(lo, hi + 1):
         # invariant:
         #  a[0..p] <= val
         #  a[p+1..i-1] > val
         #
         #     <=        >         ?
-        #  |---------|------|----------|  
+        #  |---------|------|----------|
         #  lo       p        i        hi
         #
         if a[i] <= val:
             p += 1
             swap(a, p, i)
-    
+
     # Last iteration must swap a[p] with a[hi]
     # which means a[p] = val.  Together with the
     # invariant, this means:
@@ -67,19 +67,38 @@ def partition(a, lo, hi):
     return p
 
 
+def position_pivot(a, lo, hi):
+    """
+    various possibilities, but here we select a reasonably
+    robust pivot selection methodology: median of three
+   
+    After possibly several swaps, a[hi] is the "median"
+    value of a[lo], a[hi-1], a[hi].
+    
+    Note:
+    - it's assumed lo < hi
+    """
+    m = hi - 1
+    if a[hi] > a[m]:
+        swap(a, hi, m)
+    if a[lo] > a[m]:
+        swap(a, lo, m)
+    if a[hi] < a[lo]:
+        swap(a, hi, lo)
+
+
 def swap(a, i, j):
     a[i], a[j] = a[j], a[i]
 
-def shuffle(a): 
-    from random import randrange
+
+def shuffle(a):
     for i in reversed(range(len(a))):
         n = randrange(i + 1)
         swap(a, n, i)
-        
-    
-    
-# if __name__ == '__main__':
-a = list(range(100))
-shuffle(a)
-quicksort(a, 0, len(a)-1)
-print(a)
+
+
+if __name__ == "__main__":
+    a = list(range(100))
+    shuffle(a)
+    quicksort(a, 0, len(a) - 1)
+    print(a)
