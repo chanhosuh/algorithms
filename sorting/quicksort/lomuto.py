@@ -6,7 +6,9 @@ We tweak a refinement attributed to Sedgewick in Exercise 2,
 so that no final swap of the pivot and comparison index is
 needed, but we prefer to scan from left to right. ;)
 """
-from random import randrange
+from sorting.quicksort.utils import position_pivot, shuffle, swap
+
+# pylint: disable=redefined-outer-name
 
 
 def quicksort(a, lo, hi):
@@ -30,12 +32,12 @@ def partition(a, lo, hi):
         a (list): list to be partitioned
         lo: valid index in a
         hi: valid index in a
-    
+
     Returns:
         int:
             "pivot" index, everything below is "<="
             and everything above is ">".
-            
+
             The pivot element is in a correct, sorted
             position.  This is key to the termination
             of quicksort, as we know each partition
@@ -65,36 +67,6 @@ def partition(a, lo, hi):
     #    a[j] > a[p] for j > p
     #
     return p
-
-
-def position_pivot(a, lo, hi):
-    """
-    various possibilities, but here we select a reasonably
-    robust pivot selection methodology: median of three
-   
-    After possibly several swaps, a[hi] is the "median"
-    value of a[lo], a[hi-1], a[hi].
-    
-    Note:
-    - it's assumed lo < hi
-    """
-    m = hi - 1
-    if a[hi] > a[m]:
-        swap(a, hi, m)
-    if a[lo] > a[m]:
-        swap(a, lo, m)
-    if a[hi] < a[lo]:
-        swap(a, hi, lo)
-
-
-def swap(a, i, j):
-    a[i], a[j] = a[j], a[i]
-
-
-def shuffle(a):
-    for i in reversed(range(len(a))):
-        n = randrange(i + 1)
-        swap(a, n, i)
 
 
 if __name__ == "__main__":
