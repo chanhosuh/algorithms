@@ -26,20 +26,21 @@ class ArticulationPoints:
         """
         Through DFS, an articulation point v is found
         precisely when one of two conditions hold:
-        
+
         1. v is a root vertex of the DFS tree and
            has more than one successor
         2. v is an interior vertex of the DFS tree
            and has a successor w such that:
-              
+
               earliest(w) >= visit_step(v)
         """
 
 
 if __name__ == "__main__":
+    # pylint: disable=pointless-string-statement
     """
     Expected result:
-    
+
 
     """
     graph = create_graph("graphs/data/tinyG.txt")
