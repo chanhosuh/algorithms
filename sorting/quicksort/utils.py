@@ -1,7 +1,7 @@
 from random import randrange
 
 
-def position_pivot(a, lo, hi):
+def position_pivot(a, lo, hi, pivot=None):
     """
     various possibilities, but here we select a reasonably
     robust pivot selection methodology: median of three
@@ -19,6 +19,9 @@ def position_pivot(a, lo, hi):
         swap(a, lo, m)
     if a[hi] < a[lo]:
         swap(a, hi, lo)
+
+    if pivot:
+        swap(a, hi, pivot)
 
 
 def swap(a, i, j):

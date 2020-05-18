@@ -5,7 +5,7 @@ this is to handle the issue with many duplicates equal to the
 pivot value that occurs with the Lomuto method.
 """
 from .lomuto import shuffle, position_pivot, swap
-from sorting.quicksort.utils import print_if_sorted, random_list
+from .utils import print_if_sorted, random_list
 
 # pylint: disable=redefined-outer-name
 
@@ -20,9 +20,9 @@ def quicksort(a, lo, hi):
     if lo >= hi:
         return
 
-    p = partition(a, lo, hi)
-    quicksort(a, lo, p - 1)
-    quicksort(a, p + 1, hi)
+    p, q = partition(a, lo, hi)
+    quicksort(a, lo, p)
+    quicksort(a, q, hi)
 
 
 def partition(a, lo, hi):
@@ -33,49 +33,48 @@ def partition(a, lo, hi):
         hi: valid index in a
 
     Returns:
-        int:
-            "pivot" index, everything below is "<="
-            and everything above is ">=".
+        p, q:
+            two indices, bounding an open interval
+            which contains elements equal to the pivot
+            value
 
             The pivot element is in a correct, sorted
             position.  This is key to the termination
             of quicksort, as we know each partition
             step makes progress.
     """
-    position_pivot(a, lo, hi)
-    val = a[hi]
-    p = q = lo - 1
-    for i in range(lo, hi + 1):
+    position_pivot(a, lo, hi, pivot=lo)
+    val = a[lo]
+    p = lo - 1
+    q = hi + 1
+    i = lo + 1
+    while i < q:
         # invariant:
-        #  a[0..p] < val
-        #  a[p+1..q] == val
-        #  a[q+1..i-1] > val
+        #  a[lo..p] < val
+        #  a[p+1..i-1] == val
+        #  a[q..hi] > val
         #
-        #       <       =       >           ?
+        #       <       =       ?           >
         #  |---------|-----|---------|----------|
-        #  lo       p     q           i        hi
+        #  lo       p       i         q        hi
         #
-        if a[i] == val:
-            q += 1
-            swap(a, q, i)
-        elif a[i] < val:
+        if a[i] < val:
             p += 1
             swap(a, p, i)
-            q += 1
-            if a[i] == val:
-                swap(a, q, i)
+            i += 1
+        elif a[i] > val:
+            q -= 1
+            swap(a, q, i)
+        else:
+            i += 1
 
-    # Last iteration must swap a[q] with a[hi]
-    # which means a[q] = val.  Together with the
-    # invariant, this means:
+    # The invariant implies:
     #
-    #    a[i] < a[q] for i <= p
-    #    a[i] == a[q] for p < i <= q
-    #    a[i] > a[q] for i > q
+    #    a[i] < val for i <= p
+    #    a[i] == val for p < i < q
+    #    a[i] > val for i > q
     #
-    # Return the average index of equal vals
-    # to avoid unbalanced partitioning
-    return ((p + 1) + q) // 2
+    return p, q
 
 
 if __name__ == "__main__":
@@ -110,3 +109,7 @@ if __name__ == "__main__":
         a = random_list(100000, 10000)
         quicksort(a, 0, len(a) - 1)
         print_if_sorted(a)
+
+# TODO:
+# let's do some doubling tests to see that we really do have
+# an O(n log n) quicksort implementation
