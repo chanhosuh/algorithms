@@ -33,7 +33,7 @@ def shuffle(a):
 
 def print_head(a, num=10):
     """ print head of the list only """
-    print(a[:num] + ["..."])
+    print("    ", a[:num] + ["..."])
 
 
 def is_sorted(a):
@@ -45,9 +45,20 @@ def is_sorted(a):
     return True
 
 
+# ANSI escape codes
+BOLD = "\033[1m"
+RESET = "\033[0m"
+REVERSE = "\033[7m"
+RED = "\033[00;31m"
+GREEN = "\033[0;32m"
+
+FAILED_MSG = f"{BOLD}sort{RESET}: {RED}FAILED{RESET}"
+SUCCEEDED_MSG = f"{BOLD}sort{RESET}: {GREEN}SUCCEEDED{RESET}"
+
+
 def print_if_sorted(a):
     if is_sorted(a):
-        print("**** List is sorted ****")
+        print(SUCCEEDED_MSG)
     else:
-        print("**** List is NOT sorted ****")
+        print(FAILED_MSG)
     print_head(a)
