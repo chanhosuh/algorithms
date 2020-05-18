@@ -45,6 +45,10 @@ def is_sorted(a):
     return True
 
 
+def random_list(num, max_num):
+    return [randrange(max_num + 1) for _ in range(num)]
+
+
 # ANSI escape codes
 BOLD = "\033[1m"
 RESET = "\033[0m"
