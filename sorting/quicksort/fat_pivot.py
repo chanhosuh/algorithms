@@ -4,8 +4,8 @@ it is suggested to use a "fat pivot" invariant.  Presumably,
 this is to handle the issue with many duplicates equal to the
 pivot value that occurs with the Lomuto method.
 """
-from .lomuto import shuffle, position_pivot, swap
-from .utils import print_if_sorted, random_list
+from .utils import position_pivot, print_if_sorted, random_list, shuffle, swap
+
 
 # pylint: disable=redefined-outer-name
 

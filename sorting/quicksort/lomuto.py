@@ -6,7 +6,8 @@ We tweak a refinement attributed to Sedgewick in Exercise 2,
 so that no final swap of the pivot and comparison index is
 needed, but we prefer to scan from left to right. ;)
 """
-from sorting.quicksort.utils import position_pivot, shuffle, swap
+from .utils import position_pivot, shuffle, swap
+
 
 # pylint: disable=redefined-outer-name
 
