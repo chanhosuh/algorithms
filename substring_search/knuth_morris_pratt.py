@@ -76,9 +76,7 @@ class DFA(object):
                     row[char] = transition_table[aux_state][char]
             transition_table.append(row)
             # now we need to update our auxiliary state
-            for char in RADIX:
-                if char == pattern_char:
-                    aux_state = transition_table[aux_state][char]
+            aux_state = transition_table[aux_state][pattern_char]
 
         return transition_table
 
