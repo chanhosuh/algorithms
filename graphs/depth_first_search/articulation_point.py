@@ -24,17 +24,22 @@ class ArticulationPoints:
         self.earliest = [math.inf] * graph.num_vertices
 
         self.articulation_points = []
+
         for u in graph.vertices:
             if self.visited(u):
                 continue
 
             self.visit_steps[u] = self.step
 
-            if len(graph.adj[u]) >= 2:
-                self.articulation_points.append(u)
-
+            children = 0
             for v in graph.adj[u]:
+                if self.visited(v):
+                    continue
+                children += 1
                 self.depth_first_search(graph, v)
+
+            if children >= 2:
+                self.articulation_points.append(u)
 
     def depth_first_search(self, graph, v):
         """
@@ -50,6 +55,7 @@ class ArticulationPoints:
         """
         self.step += 1
         self.visit_steps[v] = self.step
+
         for w in graph.adj[v]:
             if self.visited(w):
                 self.earliest[v] = min(self.earliest[v], self.visit_steps[w])
