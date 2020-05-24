@@ -1,5 +1,5 @@
 """
-Adjency-list representation of a graph
+Adjacency list representation of a graph
 """
 
 
