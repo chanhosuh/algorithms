@@ -1,17 +1,12 @@
-'''
-Created on Jul 3, 2017
-
-@author: suh
-'''
-
 # our alphabet consists of all printable ascii characters
-from string import printable, ascii_lowercase
+from string import ascii_lowercase
 
 RADIX = ascii_lowercase
 
 
+# pylint: disable=redefined-outer-name
 class DFA(object):
-    '''
+    """
     The Knuth--Morris--Pratt algorithm for substring search:
 
     The key idea is to create a lookup table based on the pattern,
@@ -21,7 +16,7 @@ class DFA(object):
 
     A clean way to implement this is as a discrete finite automaton
     (DFA), as in Sedgewick & Wayne's Algorithms.  Since every prefix
-    of the pattern is determined by its length, we can simply use 
+    of the pattern is determined by its length, we can simply use
     the prefix length as the state of the DFA and we have to determine
     how an input character transitions the DFA to the next state.
 
@@ -29,7 +24,7 @@ class DFA(object):
     of the pattern string.  A state value of i while processing the
     input stream means the last i characters processed are maximal
     with respect to forming a prefix of the pattern.
-    '''
+    """
 
     def __init__(self, pattern):
         self.pattern = pattern
@@ -38,13 +33,13 @@ class DFA(object):
 
     @staticmethod
     def preprocess_pattern(pattern):
-        '''
+        """
         Uses Knuth--Morris--Pratt algorithm to preprocess lookup pattern
         into a prefix table, implemented as a discrete finite automaton.
 
         :param pattern: string to search for
         :returns: transition_table
-        '''
+        """
 
         transition_table = []
 
@@ -81,35 +76,42 @@ class DFA(object):
         return transition_table
 
     def read_char(self, char):
-        ''' based on single character input and current state, transitions to next state '''
+        """
+        based on single character input and current state,
+        transitions to next state
+        """
         self.state = self.transition_table[self.state][char]
 
     @property
     def found(self):
-        ''' Returns boolean based on whether pattern has been matched '''
+        """ Returns boolean based on whether pattern has been matched """
         return self.state == len(self.pattern)
 
     def read_stream(self, input_sequence):
-        '''
+        """
 
         :param input_sequence: sequence of input characters, possibly infinite
         :returns: index of first match; index is length of sequence if no match
-        '''
+        """
+        i = len(input_sequence) - 1
         for i, char in enumerate(input_sequence):
             self.read_char(char)
-            print char, self.state
+            print(char, self.state)
             if self.found:
                 return i - len(self.pattern) + 1
         return i + 1
 
 
-if __name__ == '__main__':
-    pattern = 'fifofum'
+if __name__ == "__main__":
+    pattern = "fifofum"
     dfa = DFA(pattern)
-    input_sequence = 'fififefofuhfeefififahlalafofumdumdumfeefifoofumfifkejfoolahlahfeefifeiiifeofeefifofumfieflfiefofuhfeefifif'
+    input_sequence = (
+        "fififefofuhfeefififahlalafofumdumdumfeefifoofumfifkejfoolahlahfeefife"
+        "iiifeofeefifofumfieflfiefofuhfeefifif"
+    )
     ind = dfa.read_stream(input_sequence)
 
     if ind < len(input_sequence):
-        print 'found pattern starting at index %s' % ind
+        print("Found pattern starting at index %s" % ind)
     else:
-        print 'did not find pattern'
+        print("Did not find pattern")
