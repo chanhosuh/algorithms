@@ -38,10 +38,21 @@ class ArticulationPoints:
 
 if __name__ == "__main__":
     # pylint: disable=pointless-string-statement
-    """
+    r"""
+    Graph looks like:
+
+     0 ----------- 6     7 ---- 8
+    /|\           /
+   | | \         /
+   | 1  2       /        9 ---- 10
+   |           /         |\____
+   | _ 3 __   /          |     \
+   |/      \ /           11 --- 12
+   5 ------ 4
+
     Expected result:
 
-
+    0, 9
     """
     graph = create_graph("graphs/data/tinyG.txt")
     ap = ArticulationPoints(graph)
