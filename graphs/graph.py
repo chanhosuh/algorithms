@@ -57,9 +57,9 @@ class DirectedEdge(object):
         self.start = start
         self.end = end
         self.weight = weight
-    
+
     def __repr__(self):
-        return f"DirectedEdge(start={self.start} end={self.end} weight={self.weight})"
+        return f"DirectedEdge(start={self.start}, end={self.end}, weight={self.weight})"
 
 
 def create_weighted_digraph(text_file):
